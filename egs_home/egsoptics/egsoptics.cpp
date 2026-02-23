@@ -135,6 +135,11 @@ void handleOpticalBoundary(double n1, double n2, double cos_theta_i, double &R, 
     // Average for unpolarized light
     R = 0.5 * (Rs+Rp);
 
+    //R is absolute value, but since squared, ignore that
+    //R = (n1-n2)/(n1+n2);
+    //R *= R;
+    R = pow((n1-n2)/(n1+n2),2); 
+
     // Transmission is simply 1 - R (energy conservation assumption)
     T = 1.0 - R;
     egsInformation("Reflection Coefficient: R = %.3f, Transmission Coefficient: T = %.3f\n", R, T);
