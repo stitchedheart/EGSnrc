@@ -170,4 +170,10 @@
         particle type = photon
     :stop interaction:
 
+    ### testing optics ausgab
+    :start ausgab object:
+        name = optics_test
+        library = egsoptics
+    :stop ausgab object:
+
 :stop ausgab object definition:
