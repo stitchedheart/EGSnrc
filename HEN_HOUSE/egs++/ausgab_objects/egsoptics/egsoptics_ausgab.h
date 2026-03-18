@@ -34,9 +34,11 @@ public:
         int ir = app->top_p.ir;  //Index region for the particle
         EGS_Float edep = app->getEdep();  //Energy deposited
 
-        std::cout << "EGS_Optics called! iarg = " << iarg
-              << ", region = " << ir
-              << ", edep = " << edep << std::endl;
+        static bool firstPrint = true;
+        if(firstPrint && iarg == 0) {
+            std::cout << "EGS_Optics ausgab object successfully called!" << std::endl;
+            firstPrint = false;  // prevent further prints
+        }
 
         if (ir >= 0 && edep > 0){
             //This is where code things need to go.
@@ -44,6 +46,8 @@ public:
             //and edep to be the user inputted value
             //for minimum energy for optical photons
             //to be produced.
+
+            egsInformation("Energy deposited in step is: %.4f MeV", edep);
         }
         return 0;
     }
