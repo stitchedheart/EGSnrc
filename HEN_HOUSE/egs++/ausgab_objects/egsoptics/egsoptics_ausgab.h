@@ -15,6 +15,7 @@
 #define EGS_OPTICS_
 
 #include "egs_ausgab_object.h"
+#include "egs_advanced_application.h"
 #include "egs_base_geometry.h"
 #include "egs_application.h"
 #include <string>
@@ -23,16 +24,19 @@ class EGS_Optics : public EGS_AusgabObject{
 
 public:
 
-    EGS_Optics(const string &Name="", EGS_ObjectFactory *f = 0);
+    EGS_Optics(const std::string &Name="", EGS_ObjectFactory *f = 0);
 
     ~EGS_Optics();
+
+    void setParameters(EGS_Input *input);
 
     int processEvent(EGS_Application::AusgabCall iarg){
         
         if (!app) return 0;
 
         int ir = app->top_p.ir;  //Index region for the particle
-        EGS_Float edep = app->getEdep();  //Energy deposited
+        EGS_Float edep = app->getEdep();  //Energy deposited in MeV
+        double stepLength = app->getTVSTEP(); //in cm
 
         static bool firstPrint = true;
         if(firstPrint && iarg == 0) {
@@ -40,14 +44,19 @@ public:
             firstPrint = false;  // prevent further prints
         }
 
-        if (ir >= 0 && edep > 0){
+        if (ir == scint_region && edep >= min_edep){
             //This is where code things need to go.
             //Update ir to be the scintillator region 
             //and edep to be the user inputted value
             //for minimum energy for optical photons
             //to be produced.
 
-            egsInformation("Energy deposited in step is: %.4f MeV", edep);
+            double dEdx = edep/stepLength;
+
+            double photonNum = (scintEff*dEdx*stepLength)/(1+(birksCst*dEdx));
+
+            egsInformation("Scintillation hit in region %d, Edep = %.8f MeV\n", ir, edep);
+            egsInformation("Mean number of photons created is: %.4f", photonNum);
         }
         return 0;
     }
@@ -58,6 +67,12 @@ public:
     }
 
     void setApplication(EGS_Application *App);
+
+private:
+        int scint_region;
+        double min_edep;
+        double birksCst;
+        double scintEff;
 };
 
 #endif
