@@ -19,6 +19,7 @@
 #include "egs_base_geometry.h"
 #include "egs_application.h"
 #include <string>
+#include <random>
 
 class EGS_Optics : public EGS_AusgabObject{
 
@@ -56,7 +57,31 @@ public:
             double photonNum = (scintEff*dEdx*stepLength)/(1+(birksCst*dEdx));
 
             egsInformation("Scintillation hit in region %d, Edep = %.8f MeV\n", ir, edep);
-            egsInformation("Mean number of photons created is: %.4f", photonNum);
+            egsInformation("Mean number of photons created is: %.4f\n", photonNum);
+
+            static std::mt19937 rng(std::random_device{}());
+
+            std::poisson_distribution<int> poisson(photonNum);
+            int actualPhotons = poisson(rng);
+
+            egsInformation("Actual number of photons created is: %d\n", actualPhotons);
+            
+            if(edep>1e-6){
+                double photonsMeV = actualPhotons/edep;
+                egsInformation("Photons per MeV: %.2f\n", photonsMeV);
+            }
+
+            static double totalPhoton = 0.0;
+            static double totalEdep = 0.0;
+
+            totalPhoton += actualPhotons;
+            totalEdep += edep;
+
+            if (totalEdep > 0){
+                double runningAvg = totalPhoton/totalEdep;
+                egsInformation("Running average photon/MeV: %.0f\n", runningAvg);
+            }
+
         }
         return 0;
     }
