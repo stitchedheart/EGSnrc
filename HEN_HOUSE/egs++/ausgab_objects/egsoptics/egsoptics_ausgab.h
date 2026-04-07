@@ -46,23 +46,10 @@ public:
         }
 
         if (ir == scint_region && edep >= min_edep){
-            //This is where code things need to go.
-            //Update ir to be the scintillator region 
-            //and edep to be the user inputted value
-            //for minimum energy for optical photons
-            //to be produced.
 
-            double dEdx = edep/stepLength;
-
-            double photonNum = (scintEff*dEdx*stepLength)/(1+(birksCst*dEdx));
+            int actualPhotons = computePhotons(edep, stepLength);
 
             egsInformation("Scintillation hit in region %d, Edep = %.8f MeV\n", ir, edep);
-            egsInformation("Mean number of photons created is: %.4f\n", photonNum);
-
-            static std::mt19937 rng(std::random_device{}());
-
-            std::poisson_distribution<int> poisson(photonNum);
-            int actualPhotons = poisson(rng);
 
             egsInformation("Actual number of photons created is: %d\n", actualPhotons);
             
@@ -94,10 +81,13 @@ public:
     void setApplication(EGS_Application *App);
 
 private:
+        int computePhotons(double edep, double stepLength);
+
         int scint_region;
         double min_edep;
         double birksCst;
         double scintEff;
+        
 };
 
 #endif

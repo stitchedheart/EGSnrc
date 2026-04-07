@@ -56,6 +56,22 @@ void EGS_Optics::setApplication(EGS_Application *App){
     if(!app) return;
 }
 
+int EGS_Optics::computePhotons(double edep, double stepLength) {
+
+    if (stepLength <= 0) return 0;
+
+    double dEdx = edep / stepLength;
+
+    double meanPhotons = (scintEff * dEdx * stepLength) / (1 + (birksCst * dEdx));
+
+    egsInformation("Mean number of photons created is: %.4f\n", meanPhotons);
+
+    static std::mt19937 rng(std::random_device{}());
+    std::poisson_distribution<int> poisson(meanPhotons);
+
+    return poisson(rng);
+}
+
 extern "C" {
 
     EGS_AusgabObject *createAusgabObject(EGS_Input *input, 
