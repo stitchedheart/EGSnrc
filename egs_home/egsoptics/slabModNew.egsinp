@@ -178,6 +178,7 @@
         min_edep = 0
         birksCst = 0.126
         scintEff = 10000
+        spectrumFile = example_spectra.txt
     :stop ausgab object:
 
 :stop ausgab object definition:

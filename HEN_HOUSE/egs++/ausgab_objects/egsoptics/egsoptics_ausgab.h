@@ -31,6 +31,8 @@ public:
 
     void setParameters(EGS_Input *input);
 
+    void readSpectrum(const std::string &filename);
+
     int processEvent(EGS_Application::AusgabCall iarg){
         
         if (!app) return 0;
@@ -69,6 +71,11 @@ public:
                 egsInformation("Running average photon/MeV: %.0f\n", runningAvg);
             }
 
+            for(int i=0; i<actualPhotons; ++i){
+                double photonEnergy = samplePhotonEnergy();
+                egsInformation("Photon %d energy = %.10f MeV\n", i+1, photonEnergy);
+            }
+
         }
         return 0;
     }
@@ -82,11 +89,20 @@ public:
 
 private:
         int computePhotons(double edep, double stepLength);
+        double wavelength_nm_to_energy_MeV(double wavelength_nm);
+        double samplePhotonEnergy();
 
         int scint_region;
         double min_edep;
         double birksCst;
         double scintEff;
+
+        //For spectrum sampling
+        std::vector<double> wavelengths; //in nm
+        std::vector<double> cumulative;  //CDF 0 to 1
+        std::mt19937 rng{std::random_device{}()};  // random number generator
+        std::string spectrumFile;
+        
         
 };
 
