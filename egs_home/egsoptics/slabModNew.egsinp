@@ -81,6 +81,7 @@
     ### tantalum
     :start tantalum:
         density correction file = tantalum
+        # refractivity file = 
     :stop tantalum:
 
     ### lead
@@ -173,12 +174,12 @@
     ### testing optics ausgab
     :start ausgab object:
         name = optics_test
-        library = egsoptics
-        scint_region = 2
-        min_edep = 0
-        birksCst = 0.126
-        scintEff = 10000
-        spectrumFile = example_spectra.txt
+        library = egs_optics
+        scintillator regions = 2
+        minimum energy deposited = 0
+        birks constant = 0.126
+        scintillator efficiency = 10000
+        scintillator spectrum file = example_spectra.txt
     :stop ausgab object:
 
 :stop ausgab object definition:
