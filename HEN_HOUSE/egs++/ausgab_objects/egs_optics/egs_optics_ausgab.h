@@ -76,9 +76,24 @@ public:
                 egsInformation("Photon %d energy = %.10f MeV\n", i+1, photonEnergy);
 
                 // Build a particle structure
-                //EGS_Particle *p = new EGS_Particle;
-                //p.x = app->top_p.x;
-                //p.u = sample isotropically
+                EGS_Particle *p = new EGS_Particle;
+                p->x = app->top_p.x; //position
+                p->ir = app->top_p.ir; //region index
+
+                //Isotropic sampling for direction
+                double cost = 2.0*std::uniform_real_distribution<>(0.0,1.0)(rng) - 1.0;
+                double sint = sqrt(1.0-cost*cost);
+                double phiA = 2.0 * M_PI *std::uniform_real_distribution<>(0.0,1.0)(rng);
+
+                p->u.x = sint * cos(phiA);
+                p->u.y = sint * sin(phiA);
+                p->u.z = cost;
+
+                p->E = photonEnergy;
+                p->q = 0;
+                p->wt = 1.0;
+                p->latch = 0;
+
 
                 // Now transport it
                 //app->simulateOptical(p);
