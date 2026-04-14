@@ -96,7 +96,7 @@ public:
 
 
                 // Now transport it
-                //app->simulateOptical(p);
+                app->simulateOptical(*p);
             }
 
         }

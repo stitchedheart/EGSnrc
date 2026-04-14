@@ -958,6 +958,10 @@ int EGS_Application::simulateSingleShower() {
     return finishShower();
 }
 
+void EGS_Application::simulateOptical(const EGS_Particle &p){
+    egsInformation("It works\n");
+}
+
 int EGS_Application::startNewShower() {
     if (current_case != last_case) {
         for (int j=0; j<a_objects_list.size(); ++j) {

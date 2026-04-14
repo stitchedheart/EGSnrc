@@ -381,6 +381,13 @@ public:
     */
     virtual int simulateSingleShower();
 
+    /*! \brief transports optical photons generated from scintillation events.
+
+    This function is called from AUSGAB after energy deposition events
+    to simulate optical photon production and transport.
+    */
+    virtual void simulateOptical(const EGS_Particle &p);
+
     /*! \brief Report the current result.
 
      This virtual function should be re-implemented in derived classes
